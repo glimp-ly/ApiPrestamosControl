@@ -1,0 +1,372 @@
+{
+  "info": {
+    "name": "PrestaControl API",
+    "description": "Colección Postman v2.1 para probar autenticación JWT y CRUD de préstamos en PrestaControl.",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "auth": {
+    "type": "bearer",
+    "bearer": [
+      {
+        "key": "token",
+        "value": "{{token}}",
+        "type": "string"
+      }
+    ]
+  },
+  "variable": [
+    {
+      "key": "baseUrl",
+      "value": "http://localhost:8080",
+      "type": "string"
+    },
+    {
+      "key": "token",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "prestamoId",
+      "value": "",
+      "type": "string"
+    }
+  ],
+  "item": [
+    {
+      "name": "POST /auth/register",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test('Status code is 201', function () {",
+              "    pm.response.to.have.status(201);",
+              "});",
+              "const json = pm.response.json();",
+              "if (json && json.token) {",
+              "    pm.collectionVariables.set('token', json.token);",
+              "}"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "auth": {
+          "type": "noauth"
+        },
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"nombre\": \"Juan Prestamista\",\n  \"email\": \"prestamista@example.com\",\n  \"password\": \"secreto123\"\n}"
+        },
+        "url": {
+          "raw": "{{baseUrl}}/auth/register",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "auth",
+            "register"
+          ]
+        }
+      }
+    },
+    {
+      "name": "POST /auth/login",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test('Status code is 200', function () {",
+              "    pm.response.to.have.status(200);",
+              "});",
+              "const json = pm.response.json();",
+              "if (json && json.token) {",
+              "    pm.collectionVariables.set('token', json.token);",
+              "}"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "auth": {
+          "type": "noauth"
+        },
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"email\": \"prestamista@example.com\",\n  \"password\": \"secreto123\"\n}"
+        },
+        "url": {
+          "raw": "{{baseUrl}}/auth/login",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "auth",
+            "login"
+          ]
+        }
+      }
+    },
+    {
+      "name": "POST /prestamos",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test('Status code is 201', function () {",
+              "    pm.response.to.have.status(201);",
+              "});",
+              "const json = pm.response.json();",
+              "if (json && json.id !== undefined) {",
+              "    pm.collectionVariables.set('prestamoId', String(json.id));",
+              "}"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"cliente\": \"Carlos Mendoza\",\n  \"dni\": \"12345678\",\n  \"monto\": 1000.00,\n  \"interes\": 15.00,\n  \"fechaVencimiento\": \"2026-12-31\",\n  \"pagado\": false\n}"
+        },
+        "url": {
+          "raw": "{{baseUrl}}/prestamos",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "prestamos"
+          ]
+        }
+      }
+    },
+    {
+      "name": "GET /prestamos",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test('Status code is 200', function () {",
+              "    pm.response.to.have.status(200);",
+              "});"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{baseUrl}}/prestamos",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "prestamos"
+          ],
+          "query": [
+            {
+              "key": "pagado",
+              "value": "false",
+              "disabled": true
+            },
+            {
+              "key": "buscar",
+              "value": "Carlos",
+              "disabled": true
+            }
+          ]
+        }
+      }
+    },
+    {
+      "name": "GET /prestamos/resumen",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test('Status code is 200', function () {",
+              "    pm.response.to.have.status(200);",
+              "});"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{baseUrl}}/prestamos/resumen",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "prestamos",
+            "resumen"
+          ]
+        }
+      }
+    },
+    {
+      "name": "GET /prestamos/{{prestamoId}}",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test('Status code is 200', function () {",
+              "    pm.response.to.have.status(200);",
+              "});"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{baseUrl}}/prestamos/{{prestamoId}}",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "prestamos",
+            "{{prestamoId}}"
+          ]
+        }
+      }
+    },
+    {
+      "name": "PUT /prestamos/{{prestamoId}}",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test('Status code is 200', function () {",
+              "    pm.response.to.have.status(200);",
+              "});"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "PUT",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"pagado\": true\n}"
+        },
+        "url": {
+          "raw": "{{baseUrl}}/prestamos/{{prestamoId}}",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "prestamos",
+            "{{prestamoId}}"
+          ]
+        }
+      }
+    },
+    {
+      "name": "DELETE /prestamos/{{prestamoId}}",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test('Status code is 204', function () {",
+              "    pm.response.to.have.status(204);",
+              "});"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "DELETE",
+        "header": [],
+        "url": {
+          "raw": "{{baseUrl}}/prestamos/{{prestamoId}}",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "prestamos",
+            "{{prestamoId}}"
+          ]
+        }
+      }
+    },
+    {
+      "name": "GET /prestamos (sin token - 401)",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test('Status code is 401', function () {",
+              "    pm.response.to.have.status(401);",
+              "});"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "auth": {
+          "type": "noauth"
+        },
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{baseUrl}}/prestamos",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "prestamos"
+          ]
+        }
+      }
+    }
+  ]
+}

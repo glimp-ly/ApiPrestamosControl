@@ -1,0 +1,41 @@
+databases:
+  - name: prestacontrol-db
+    databaseName: prestacontrol
+    user: prestacontrol
+    plan: free
+
+services:
+  - type: web
+    name: prestacontrol-api
+    runtime: docker
+    plan: free
+    dockerfilePath: ./Dockerfile
+    envVars:
+      - key: PORT
+        value: 8080
+      - key: DB_HOST
+        fromDatabase:
+          name: prestacontrol-db
+          property: host
+      - key: DB_PORT
+        fromDatabase:
+          name: prestacontrol-db
+          property: port
+      - key: DB_NAME
+        fromDatabase:
+          name: prestacontrol-db
+          property: database
+      - key: DB_USERNAME
+        fromDatabase:
+          name: prestacontrol-db
+          property: user
+      - key: DB_PASSWORD
+        fromDatabase:
+          name: prestacontrol-db
+          property: password
+      - key: JPA_DDL_AUTO
+        value: update
+      - key: JWT_SECRET
+        generateValue: true
+      - key: JWT_EXPIRATION_MS
+        value: 86400000

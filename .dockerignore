@@ -1,0 +1,15 @@
+.git
+.gitignore
+.gradle
+build
+.idea
+*.iml
+.vscode
+.env
+*.pdf
+HELP.md
+README.md
+docker-compose.yml
+render.yaml
+postman
+sql
